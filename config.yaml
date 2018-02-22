@@ -1,0 +1,18 @@
+proxy:
+  secretToken: dd118366b9deccee55bb48a4dc77ff01838cb7494bff4ed721ef494522233a81
+
+hub:
+  image:
+    name: zcesur/jupyter-hub
+    tag: latest
+  extraConfig: |
+    c.JupyterHub.tornado_settings = {'headers': {'Content-Security-Policy': "frame-ancestors 'self' http://localhost:8080"}}
+    c.JupyterHub.spawner_class = 'kubespawner.KubeSpawner'
+    c.JupyterHub.cleanup_servers = True
+    c.KubeSpawner.singleuser_image_spec = 'zcesur/jupyter-singleuser'
+    c.Spawner.default_url = '/lab'
+
+auth:
+  type: "custom"
+  custom:
+    className: "tmpauthenticator.TmpAuthenticator"

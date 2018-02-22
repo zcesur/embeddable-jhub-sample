@@ -1,0 +1,35 @@
+proxy:
+  secretToken: dd118366b9deccee55bb48a4dc77ff01838cb7494bff4ed721ef494522233a81
+  service:
+    type: NodePort
+    nodePorts:
+      http: 31212
+
+hub:
+  image:
+    name: zcesur/jupyter-hub
+    tag: latest
+  cookieSecret: 5cbe187d2861a85f81b5478727cbc2822025c586631d7f398eadf4010515544a
+  db:
+    type: sqlite-memory
+  extraConfig: |
+    c.JupyterHub.tornado_settings = {'headers': {'Content-Security-Policy': "frame-ancestors 'self' http://localhost:8080"}}
+    c.JupyterHub.spawner_class = 'kubespawner.KubeSpawner'
+    c.JupyterHub.cleanup_servers = True
+    c.KubeSpawner.singleuser_image_spec = 'zcesur/jupyter-singleuser'
+    c.Spawner.default_url = '/lab'
+
+singleuser:
+  storage:
+    type: none
+  memory:
+    guarantee: null
+
+prePuller:
+  hook:
+    enabled: false
+
+auth:
+  type: "custom"
+  custom:
+    className: "tmpauthenticator.TmpAuthenticator"
